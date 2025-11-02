@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhoneInfo Pro | Secure Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #7209b7;
+            --success: #4cc9f0;
+            --danger: #f72585;
+            --warning: #f8961e;
+            --dark: #212529;
+            --light: #f8f9fa;
+            --gray: #6c757d;
+            --border-radius: 12px;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Auth Forms */
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 80vh;
+        }
+
+        .auth-card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 450px;
+            padding: 40px;
+            transition: var(--transition);
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .auth-header h2 {
+            color: var(--dark);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .auth-header p {
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--dark);
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #e1e5ee;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            transition: var(--transition);
+            background-color: #f9fafb;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
+            background-color: white;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 14px 20px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary);
+        }
+
+        .btn-secondary:hover {
+            background-color: #6510a0;
+        }
+
+        .btn-success {
+            background-color: var(--success);
+        }
+
+        .btn-success:hover {
+            background-color: #3ab3d6;
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 14px;
+            color: var(--gray);
+        }
+
+        .auth-footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .auth-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Dashboard */
+        .dashboard {
+            display: none;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            min-height: 80vh;
+        }
+
+        .dashboard-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 25px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dashboard-header h1 {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .dashboard-content {
+            display: flex;
+            min-height: calc(80vh - 90px);
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #f8f9fa;
+            padding: 25px 0;
+            border-right: 1px solid #e9ecef;
+        }
+
+        .nav-item {
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--dark);
+            text-decoration: none;
+            transition: var(--transition);
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+            border-right: 3px solid var(--primary);
+        }
+
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 30px;
+        }
+
+        .tool-card, .profile-card, .history-card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .tool-header, .profile-header, .history-header {
+            margin-bottom: 25px;
+        }
+
+        .tool-header h2, .profile-header h2, .history-header h2 {
+            color: var(--dark);
+            margin-bottom: 8px;
+        }
+
+        .tool-header p, .profile-header p, .history-header p {
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .input-group .form-control {
+            flex: 1;
+        }
+
+        .btn-search {
+            width: auto;
+            padding: 14px 25px;
+        }
+
+        .results-container {
+            display: none;
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .results-count {
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        .refresh-btn {
+            background: transparent;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            border-radius: 6px;
+            transition: var(--transition);
+        }
+
+        .refresh-btn:hover {
+            background: rgba(67, 97, 238, 0.1);
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .result-card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+            border: 1px solid #e9ecef;
+            transition: var(--transition);
+        }
+
+        .result-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .result-name {
+            font-weight: 700;
+            color: var(--dark);
+            font-size: 18px;
+        }
+
+        .result-id {
+            background: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .result-details {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .detail-item {
+            display: flex;
+            gap: 10px;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: var(--dark);
+            min-width: 70px;
+            font-size: 14px;
+        }
+
+        .detail-value {
+            color: var(--gray);
+            font-size: 14px;
+            flex: 1;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(67, 97, 238, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            display: none;
+            background: rgba(247, 37, 133, 0.1);
+            color: var(--danger);
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+            border-left: 4px solid var(--danger);
+        }
+
+        .success-message {
+            display: none;
+            background: rgba(76, 201, 240, 0.1);
+            color: var(--success);
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+            border-left: 4px solid var(--success);
+        }
+
+        .logout-btn {
+            background: transparent;
+            border: none;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            border-radius: 6px;
+            transition: var(--transition);
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Profile Page */
+        .profile-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .profile-field {
+            margin-bottom: 20px;
+        }
+
+        .profile-field label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--dark);
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .profile-field .form-control {
+            background-color: #f9fafb;
+        }
+
+        .profile-field .form-control:read-only {
+            background-color: #e9ecef;
+            cursor: not-allowed;
+        }
+
+        /* History Page */
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .history-table th,
+        .history-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .history-table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .history-table tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: var(--gray);
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 15px;
+            color: #dee2e6;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard-content {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                padding: 15px 0;
+            }
+            
+            .input-group {
+                flex-direction: column;
+            }
+            
+            .btn-search {
+                width: 100%;
+            }
+            
+            .profile-info {
+                grid-template-columns: 1fr;
+            }
+            
+            .history-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Login Form -->
+        <div class="auth-container" id="login-container">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <h2>Welcome Back</h2>
+                    <p>Sign in to access your dashboard</p>
+                </div>
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="login-email">Email</label>
+                        <input type="email" id="login-email" class="form-control" placeholder="Enter your email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" class="form-control" placeholder="Enter your password" required>
+                    </div>
+                    <button type="submit" class="btn">Sign In</button>
+                </form>
+                <div class="auth-footer">
+                    Don't have an account? <a href="#" id="show-register">Sign Up</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Register Form -->
+        <div class="auth-container" id="register-container" style="display: none;">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <h2>Create Account</h2>
+                    <p>Sign up to get started with PhoneInfo Pro</p>
+                </div>
+                <form id="register-form">
+                    <div class="form-group">
+                        <label for="register-name">Full Name</label>
+                        <input type="text" id="register-name" class="form-control" placeholder="Enter your full name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-email">Email</label>
+                        <input type="email" id="register-email" class="form-control" placeholder="Enter your email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-password">Password</label>
+                        <input type="password" id="register-password" class="form-control" placeholder="Create a password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-confirm">Confirm Password</label>
+                        <input type="password" id="register-confirm" class="form-control" placeholder="Confirm your password" required>
+                    </div>
+                    <button type="submit" class="btn">Create Account</button>
+                </form>
+                <div class="auth-footer">
+                    Already have an account? <a href="#" id="show-login">Sign In</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard -->
+        <div class="dashboard" id="dashboard">
+            <div class="dashboard-header">
+                <h1>PhoneInfo Pro</h1>
+                <div class="user-info">
+                    <div class="user-avatar" id="user-avatar">JD</div>
+                    <button class="logout-btn" id="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </div>
+            <div class="dashboard-content">
+                <div class="sidebar">
+                    <a class="nav-item active" data-page="tool">
+                        <i class="fas fa-tools"></i> Use Tool
+                    </a>
+                    <a class="nav-item" data-page="history">
+                        <i class="fas fa-history"></i> Search History
+                    </a>
+                    <a class="nav-item" data-page="profile">
+                        <i class="fas fa-user"></i> Profile
+                    </a>
+                </div>
+                <div class="main-content">
+                    <!-- Tool Page -->
+                    <div class="tool-page" id="tool-page">
+                        <div class="tool-card">
+                            <div class="tool-header">
+                                <h2>Phone Number Information</h2>
+                                <p>Enter a phone number to retrieve detailed information</p>
+                            </div>
+                            <div class="input-group">
+                                <input type="text" id="phone-number" class="form-control" placeholder="Enter phone number (e.g., 8076721598)" required>
+                                <button class="btn btn-search" id="search-btn">
+                                    <i class="fas fa-search"></i> Search
+                                </button>
+                            </div>
+                            <div class="error-message" id="error-message">
+                                <i class="fas fa-exclamation-circle"></i> <span id="error-text">An error occurred</span>
+                            </div>
+                            <div class="success-message" id="success-message">
+                                <i class="fas fa-check-circle"></i> <span id="success-text">Search completed successfully</span>
+                            </div>
+                            <div class="loading" id="loading">
+                                <div class="spinner"></div>
+                                <p>Fetching phone information...</p>
+                            </div>
+                            <div class="results-container" id="results-container">
+                                <div class="results-header">
+                                    <h3>Search Results</h3>
+                                    <div class="results-count" id="results-count">3 records found</div>
+                                    <button class="refresh-btn" id="refresh-btn">
+                                        <i class="fas fa-sync-alt"></i> Refresh
+                                    </button>
+                                </div>
+                                <div class="results-grid" id="results-grid">
+                                    <!-- Results will be populated here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- History Page -->
+                    <div class="history-page" id="history-page" style="display: none;">
+                        <div class="history-card">
+                            <div class="history-header">
+                                <h2>Search History</h2>
+                                <p>Your previous phone number searches</p>
+                            </div>
+                            <div id="history-content">
+                                <!-- History content will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Profile Page -->
+                    <div class="profile-page" id="profile-page" style="display: none;">
+                        <div class="profile-card">
+                            <div class="profile-header">
+                                <h2>Profile Information</h2>
+                                <p>Manage your account details</p>
+                            </div>
+                            <div class="profile-info">
+                                <div class="profile-field">
+                                    <label for="profile-name">Full Name</label>
+                                    <input type="text" id="profile-name" class="form-control" readonly>
+                                </div>
+                                <div class="profile-field">
+                                    <label for="profile-email">Email</label>
+                                    <input type="email" id="profile-email" class="form-control" readonly>
+                                </div>
+                                <div class="profile-field">
+                                    <label for="profile-join-date">Join Date</label>
+                                    <input type="text" id="profile-join-date" class="form-control" readonly>
+                                </div>
+                                <div class="profile-field">
+                                    <label for="profile-searches">Total Searches</label>
+                                    <input type="text" id="profile-searches" class="form-control" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Database simulation using localStorage
+        const DB_NAME = 'phoneInfoUsers';
+        
+        // Initialize database if not exists
+        function initDatabase() {
+            if (!localStorage.getItem(DB_NAME)) {
+                const defaultData = {
+                    // Default admin user
+                    'admin@phoneinfo.com': {
+                        name: 'Admin User',
+                        password: 'admin123',
+                        joinDate: new Date().toISOString(),
+                        searchHistory: []
+                    }
+                };
+                localStorage.setItem(DB_NAME, JSON.stringify(defaultData));
+            }
+        }
+
+        // Get all users from database
+        function getUsers() {
+            return JSON.parse(localStorage.getItem(DB_NAME)) || {};
+        }
+
+        // Save user to database
+        function saveUser(email, userData) {
+            const users = getUsers();
+            users[email] = userData;
+            localStorage.setItem(DB_NAME, JSON.stringify(users));
+        }
+
+        // Get current user from session
+        function getCurrentUser() {
+            return JSON.parse(sessionStorage.getItem('currentUser'));
+        }
+
+        // Set current user in session
+        function setCurrentUser(userData) {
+            sessionStorage.setItem('currentUser', JSON.stringify(userData));
+        }
+
+        // Add search to user's history
+        function addSearchToHistory(email, phoneNumber, results) {
+            const users = getUsers();
+            if (users[email]) {
+                const searchEntry = {
+                    phoneNumber,
+                    timestamp: new Date().toISOString(),
+                    results: results
+                };
+                
+                users[email].searchHistory.unshift(searchEntry);
+                
+                // Keep only last 50 searches
+                if (users[email].searchHistory.length > 50) {
+                    users[email].searchHistory = users[email].searchHistory.slice(0, 50);
+                }
+                
+                localStorage.setItem(DB_NAME, JSON.stringify(users));
+                
+                // Update current user in session
+                if (getCurrentUser() && getCurrentUser().email === email) {
+                    setCurrentUser(users[email]);
+                }
+            }
+        }
+
+        // DOM Elements
+        const loginContainer = document.getElementById('login-container');
+        const registerContainer = document.getElementById('register-container');
+        const dashboard = document.getElementById('dashboard');
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+        const showRegisterLink = document.getElementById('show-register');
+        const showLoginLink = document.getElementById('show-login');
+        const logoutBtn = document.getElementById('logout-btn');
+        const searchBtn = document.getElementById('search-btn');
+        const phoneInput = document.getElementById('phone-number');
+        const resultsContainer = document.getElementById('results-container');
+        const resultsGrid = document.getElementById('results-grid');
+        const loading = document.getElementById('loading');
+        const errorMessage = document.getElementById('error-message');
+        const errorText = document.getElementById('error-text');
+        const successMessage = document.getElementById('success-message');
+        const successText = document.getElementById('success-text');
+        const resultsCount = document.getElementById('results-count');
+        const refreshBtn = document.getElementById('refresh-btn');
+        const userAvatar = document.getElementById('user-avatar');
+        const navItems = document.querySelectorAll('.nav-item');
+        const toolPage = document.getElementById('tool-page');
+        const historyPage = document.getElementById('history-page');
+        const profilePage = document.getElementById('profile-page');
+        const historyContent = document.getElementById('history-content');
+        const profileName = document.getElementById('profile-name');
+        const profileEmail = document.getElementById('profile-email');
+        const profileJoinDate = document.getElementById('profile-join-date');
+        const profileSearches = document.getElementById('profile-searches');
+
+        // Initialize database on page load
+        initDatabase();
+
+        // Show Register Form
+        showRegisterLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            loginContainer.style.display = 'none';
+            registerContainer.style.display = 'flex';
+        });
+
+        // Show Login Form
+        showLoginLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            registerContainer.style.display = 'none';
+            loginContainer.style.display = 'flex';
+        });
+
+        // Handle Login
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            
+            // Simple validation
+            if (email && password) {
+                const users = getUsers();
+                
+                if (users[email] && users[email].password === password) {
+                    // Set current user
+                    setCurrentUser({
+                        email: email,
+                        name: users[email].name,
+                        joinDate: users[email].joinDate,
+                        searchHistory: users[email].searchHistory || []
+                    });
+                    
+                    // Update avatar with user initials
+                    const initials = users[email].name.split(' ').map(n => n[0]).join('').toUpperCase();
+                    userAvatar.textContent = initials;
+                    
+                    // Show dashboard
+                    loginContainer.style.display = 'none';
+                    dashboard.style.display = 'block';
+                    
+                    // Update profile page
+                    updateProfilePage();
+                } else {
+                    showError('Invalid email or password');
+                }
+            }
+        });
+
+        // Handle Registration
+        registerForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('register-name').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            const confirmPassword = document.getElementById('register-confirm').value;
+            
+            // Simple validation
+            if (name && email && password && confirmPassword) {
+                if (password !== confirmPassword) {
+                    showError('Passwords do not match!');
+                    return;
+                }
+                
+                const users = getUsers();
+                
+                if (users[email]) {
+                    showError('User with this email already exists!');
+                    return;
+                }
+                
+                // Create new user
+                const newUser = {
+                    name: name,
+                    password: password,
+                    joinDate: new Date().toISOString(),
+                    searchHistory: []
+                };
+                
+                // Save user to database
+                saveUser(email, newUser);
+                
+                // Set current user
+                setCurrentUser({
+                    email: email,
+                    name: name,
+                    joinDate: newUser.joinDate,
+                    searchHistory: []
+                });
+                
+                // Update avatar with user initials
+                const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+                userAvatar.textContent = initials;
+                
+                // Show dashboard
+                registerContainer.style.display = 'none';
+                dashboard.style.display = 'block';
+                
+                // Update profile page
+                updateProfilePage();
+                
+                showSuccess('Account created successfully!');
+            }
+        });
+
+        // Handle Logout
+        logoutBtn.addEventListener('click', () => {
+            // Clear session data
+            sessionStorage.removeItem('currentUser');
+            
+            // Show login form
+            dashboard.style.display = 'none';
+            loginContainer.style.display = 'flex';
+            
+            // Reset forms
+            loginForm.reset();
+            registerForm.reset();
+        });
+
+        // Handle Search
+        searchBtn.addEventListener('click', () => {
+            const phoneNumber = phoneInput.value.trim();
+            
+            if (!phoneNumber) {
+                showError('Please enter a phone number');
+                return;
+            }
+            
+            // Show loading, hide results and error
+            loading.style.display = 'block';
+            resultsContainer.style.display = 'none';
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'none';
+            
+            // Make API request
+            fetchPhoneInfo(phoneNumber);
+        });
+
+        // Handle Refresh
+        refreshBtn.addEventListener('click', () => {
+            const phoneNumber = phoneInput.value.trim();
+            
+            if (!phoneNumber) {
+                showError('Please enter a phone number');
+                return;
+            }
+            
+            // Show loading
+            loading.style.display = 'block';
+            
+            // Make API request
+            fetchPhoneInfo(phoneNumber);
+        });
+
+        // Fetch Phone Information from API
+        function fetchPhoneInfo(phoneNumber) {
+            const apiUrl = `https://bruzelyinfo.vercel.app/api/BruzelyNumInfo?key=bruzely&num=${phoneNumber}`;
+            
+            fetch(apiUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Hide loading
+                    loading.style.display = 'none';
+                    
+                    if (data.data && data.data.length > 0) {
+                        // Display results
+                        displayResults(data.data);
+                        
+                        // Save to user's search history
+                        const currentUser = getCurrentUser();
+                        if (currentUser) {
+                            addSearchToHistory(currentUser.email, phoneNumber, data.data);
+                            updateProfilePage();
+                        }
+                        
+                        showSuccess('Phone information retrieved successfully!');
+                    } else {
+                        showError('No information found for this phone number');
+                    }
+                })
+                .catch(error => {
+                    // Hide loading
+                    loading.style.display = 'none';
+                    
+                    // Show error
+                    showError('Failed to fetch phone information. Please try again.');
+                    console.error('Error:', error);
+                });
+        }
+
+        // Display Results
+        function displayResults(results) {
+            // Clear previous results
+            resultsGrid.innerHTML = '';
+            
+            // Update results count
+            resultsCount.textContent = `${results.length} record${results.length > 1 ? 's' : ''} found`;
+            
+            // Create result cards
+            results.forEach((result, index) => {
+                const card = document.createElement('div');
+                card.className = 'result-card';
+                
+                card.innerHTML = `
+                    <div class="result-header">
+                        <div class="result-name">${result.name || 'N/A'}</div>
+                        <div class="result-id">ID: ${result.id || 'N/A'}</div>
+                    </div>
+                    <div class="result-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Mobile:</span>
+                            <span class="detail-value">${result.mobile || 'N/A'}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Alternate:</span>
+                            <span class="detail-value">${result.alt || 'N/A'}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Father:</span>
+                            <span class="detail-value">${result.fname || 'N/A'}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Circle:</span>
+                            <span class="detail-value">${result.circle || 'N/A'}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Address:</span>
+                            <span class="detail-value">${formatAddress(result.address) || 'N/A'}</span>
+                        </div>
+                    </div>
+                `;
+                
+                resultsGrid.appendChild(card);
+            });
+            
+            // Show results container
+            resultsContainer.style.display = 'block';
+        }
+
+        // Format Address
+        function formatAddress(address) {
+            if (!address) return '';
+            
+            // Replace '!' with ', ' for better readability
+            return address.replace(/!/g, ', ');
+        }
+
+        // Show Error
+        function showError(message) {
+            errorText.textContent = message;
+            errorMessage.style.display = 'block';
+            successMessage.style.display = 'none';
+        }
+
+        // Show Success
+        function showSuccess(message) {
+            successText.textContent = message;
+            successMessage.style.display = 'block';
+            errorMessage.style.display = 'none';
+        }
+
+        // Navigation between pages
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const page = item.getAttribute('data-page');
+                
+                // Update active nav item
+                navItems.forEach(nav => nav.classList.remove('active'));
+                item.classList.add('active');
+                
+                // Show selected page
+                toolPage.style.display = page === 'tool' ? 'block' : 'none';
+                historyPage.style.display = page === 'history' ? 'block' : 'none';
+                profilePage.style.display = page === 'profile' ? 'block' : 'none';
+                
+                // Update history page if needed
+                if (page === 'history') {
+                    updateHistoryPage();
+                }
+            });
+        });
+
+        // Update History Page
+        function updateHistoryPage() {
+            const currentUser = getCurrentUser();
+            
+            if (!currentUser || !currentUser.searchHistory || currentUser.searchHistory.length === 0) {
+                historyContent.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-history"></i>
+                        <h3>No Search History</h3>
+                        <p>Your search history will appear here after you use the tool.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let historyHTML = `
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>Phone Number</th>
+                            <th>Date & Time</th>
+                            <th>Results</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            currentUser.searchHistory.forEach(entry => {
+                const date = new Date(entry.timestamp);
+                const formattedDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+                
+                historyHTML += `
+                    <tr>
+                        <td>${entry.phoneNumber}</td>
+                        <td>${formattedDate}</td>
+                        <td>${entry.results.length} record(s)</td>
+                    </tr>
+                `;
+            });
+            
+            historyHTML += `
+                    </tbody>
+                </table>
+            `;
+            
+            historyContent.innerHTML = historyHTML;
+        }
+
+        // Update Profile Page
+        function updateProfilePage() {
+            const currentUser = getCurrentUser();
+            
+            if (currentUser) {
+                profileName.value = currentUser.name;
+                profileEmail.value = currentUser.email;
+                
+                const joinDate = new Date(currentUser.joinDate);
+                profileJoinDate.value = joinDate.toLocaleDateString();
+                
+                const searchCount = currentUser.searchHistory ? currentUser.searchHistory.length : 0;
+                profileSearches.value = searchCount;
+            }
+        }
+
+        // Check if user is already logged in
+        window.addEventListener('DOMContentLoaded', () => {
+            const currentUser = getCurrentUser();
+            
+            if (currentUser) {
+                // Update avatar with user initials
+                const initials = currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase();
+                userAvatar.textContent = initials;
+                
+                // Show dashboard
+                loginContainer.style.display = 'none';
+                registerContainer.style.display = 'none';
+                dashboard.style.display = 'block';
+                
+                // Update profile page
+                updateProfilePage();
+            }
+        });
+    </script>
+</body>
+</html>
